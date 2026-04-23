@@ -14,6 +14,8 @@
   .btn{font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;padding:7px 16px;border-radius:var(--rs);cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text);transition:background .15s;}
   .btn:hover{background:#f0ede8;}
   .btn-warn{background:var(--wa-bg);border-color:var(--wa-br);color:var(--wa-tx);}
+  .btn-sm{font-size:11px;padding:3px 8px;border-radius:5px;cursor:pointer;border:1px solid var(--border);background:none;font-family:'DM Sans',sans-serif;color:var(--muted);transition:all .15s;}
+  .btn-sm:hover{border-color:var(--border2);color:var(--text);}
   .sbar{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:14px;font-size:12px;color:var(--muted);}
   .sdot{width:8px;height:8px;border-radius:50%;background:#2d9e5f;flex-shrink:0;}
   .sdot.err{background:#dc2626;}.sdot.warn{background:#d97706;}
@@ -34,17 +36,34 @@
   .crisis{margin:8px 14px;padding:8px 10px;background:var(--wa-bg);border:1px solid var(--wa-br);border-radius:var(--rs);font-size:12px;color:var(--wa-tx);line-height:1.5;}
   .dsec{padding:10px 14px 14px;}
   .dlbl{font-size:11px;color:var(--hint);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;}
-  .dgrid{display:flex;flex-wrap:wrap;gap:6px;}
-  .dp{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 10px;border-radius:var(--rs);border:1px solid var(--border);cursor:pointer;min-width:62px;background:#faf9f7;transition:background .15s,border-color .15s;user-select:none;}
+  /* segmentos do salbutamol */
+  .seg-label{font-size:11px;color:var(--muted);margin:10px 0 5px;font-weight:500;padding-left:2px;}
+  .seg-label:first-child{margin-top:0;}
+  .dgrid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;}
+  /* dose pill */
+  .dp{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 10px;border-radius:var(--rs);border:1px solid var(--border);cursor:pointer;min-width:68px;background:#faf9f7;transition:background .15s,border-color .15s;user-select:none;position:relative;}
   .dp:hover{border-color:var(--border2);background:#f0ede8;}
   .dp.tk{background:var(--ok-bg);border-color:var(--ok-br);}
+  .dp.adjusted{border-style:dashed;border-color:#7060d0;}
   .dp .ck{font-size:12px;color:var(--ok-tx);opacity:0;line-height:1;}
   .dp.tk .ck{opacity:1;}
   .dp .dt{font-size:13px;font-weight:600;}
   .dp.tk .dt{color:var(--ok-tx);}
   .dp .dd{font-size:11px;color:var(--hint);}
   .dp.tk .dd{color:var(--ok-tx);}
-  .dp .dw{font-size:10px;color:var(--ok-tx);max-width:58px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .dp .dw{font-size:10px;color:var(--ok-tx);max-width:64px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .dp .edit-btn{position:absolute;top:3px;right:3px;font-size:9px;color:var(--hint);cursor:pointer;padding:1px 4px;border-radius:3px;background:none;border:none;opacity:0;transition:opacity .15s;}
+  .dp:hover .edit-btn{opacity:1;}
+  .dp.tk .edit-btn{color:var(--ok-tx);}
+  /* modal de edição de hora */
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center;}
+  .modal-bg.open{display:flex;}
+  .modal{background:var(--surface);border-radius:var(--r);padding:20px;width:280px;box-shadow:0 8px 32px rgba(0,0,0,.15);}
+  .modal h3{font-size:15px;font-weight:600;margin-bottom:4px;}
+  .modal p{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+  .modal input[type=time]{width:100%;font-size:15px;font-family:'DM Sans',sans-serif;padding:8px 10px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface);color:var(--text);margin-bottom:12px;}
+  .modal-btns{display:flex;gap:8px;justify-content:flex-end;}
+  /* febre */
   .fcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
   .fhdr{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);}
   .fbody{padding:12px 14px;}
@@ -61,6 +80,7 @@
   .fm{color:var(--muted);font-size:12px;flex:1;}
   .delbtn{font-size:11px;color:var(--hint);cursor:pointer;padding:2px 7px;border-radius:4px;border:1px solid var(--border);background:none;font-family:'DM Sans',sans-serif;}
   .delbtn:hover{color:#dc2626;border-color:#fca5a5;}
+  /* paracetamol */
   .pcard{background:var(--surface);border:2px solid var(--wa-br);border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
   .phdr{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--wa-bg);border-bottom:1px solid var(--wa-br);}
   .pnote{padding:7px 14px;font-size:12px;color:var(--wa-tx);border-bottom:1px solid var(--border);background:#fffdf5;}
@@ -72,13 +92,14 @@
   .ppill .ptp{font-size:10px;color:var(--wa-tx);}
   .parow{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap;}
   .pnxt{font-size:11px;color:var(--hint);}
+  /* log */
   .lcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-top:20px;}
   .lhdr{padding:11px 14px;border-bottom:1px solid var(--border);font-size:14px;font-weight:600;}
   .lbody{padding:4px 14px 10px;}
   .li{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);}
   .li:last-child{border-bottom:none;}
   .ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
-  .ldot.g{background:#2d9e5f;}.ldot.o{background:#d97706;}.ldot.r{background:#dc2626;}.ldot.gr{background:#9a9a9a;}
+  .ldot.g{background:#2d9e5f;}.ldot.o{background:#d97706;}.ldot.r{background:#dc2626;}.ldot.gr{background:#9a9a9a;}.ldot.p{background:#7060d0;}
   .lt{font-size:13px;line-height:1.4;}
   .lts{font-size:11px;color:var(--hint);}
   .emp{font-size:13px;color:var(--muted);padding:8px 0;}
@@ -90,12 +111,10 @@
 <p class="sub">Iniciado a 23 de abril de 2026 · 10h00</p>
 
 <div class="sbar"><div class="sdot warn" id="sdot"></div><span id="stxt">A ligar ao Firebase...</span></div>
-
 <div class="sync-row">
   <button class="btn" onclick="doSync()">↺ Sincronizar</button>
   <span id="lsync"></span>
 </div>
-
 <div class="prog-row">
   <div class="prog-track"><div class="prog-fill" id="pf" style="width:0%"></div></div>
   <span class="prog-txt" id="pt">...</span>
@@ -138,35 +157,100 @@
   <div class="lbody" id="llist"><div class="emp">Nenhuma atividade ainda.</div></div>
 </div>
 
-<!-- Firebase SDK -->
+<!-- Modal de edição de hora -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3>Ajustar hora da dose</h3>
+    <p id="modalDesc"></p>
+    <input type="time" id="modalTime"/>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal()">Cancelar</button>
+      <button class="btn" style="background:var(--ok-bg);border-color:var(--ok-br);color:var(--ok-tx);" onclick="confirmModal()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-// ---- Firebase config ----
-const firebaseConfig = {
+firebase.initializeApp({
   apiKey: "AIzaSyAyKR1b_cWqh0tZCVad57i8NApVKUCRrtQ",
   databaseURL: "https://salome-tratamento-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "salome-tratamento",
-};
-firebase.initializeApp(firebaseConfig);
+});
 const db = firebase.database();
 const REF = db.ref('salome');
 
-// ---- Dados locais ----
 const NOME = 'Salomé';
 const START = new Date('2026-04-23T10:00:00');
-let state={}, fLog=[], pLog=[], aLog=[];
+
+// ---- Geração de doses com suporte a offsets ----
+// offsets: {medId_doseId: offsetMs} — desvio em ms aplicado a essa dose e às seguintes
+// Armazenado no Firebase para persistir entre dispositivos
+
+let state={}, fLog=[], pLog=[], aLog=[], offsets={};
 let saving=false;
 
-function genD(h,days){const d=[];for(let i=0;i<days*(24/h);i++)d.push({id:i,time:new Date(START.getTime()+i*h*3600000)});return d;}
-function genS(){const s=[{h:4,d:2},{h:6,d:2},{h:8,d:2},{h:12,d:2}],d=[];let c=new Date(START),id=0;for(const x of s)for(let i=0;i<x.d*(24/x.h);i++){d.push({id:id++,time:new Date(c)});c=new Date(c.getTime()+x.h*3600000);}return d;}
+// Gera as doses base (sem offsets)
+function genBase(intervalH, days){
+  const d=[];
+  const total = days * (24/intervalH);
+  for(let i=0;i<total;i++)
+    d.push({id:i, baseTime: new Date(START.getTime()+i*intervalH*3600000), intervalH});
+  return d;
+}
+
+function genSalbBase(){
+  const segs=[
+    {h:4,days:2,label:'4/4h — dias 1-2'},
+    {h:6,days:2,label:'6/6h — dias 3-4'},
+    {h:8,days:2,label:'8/8h — dias 5-6'},
+    {h:12,days:2,label:'12/12h — dias 7-8'}
+  ];
+  const d=[];let c=new Date(START);let id=0;
+  for(const s of segs){
+    const count=s.days*(24/s.h);
+    for(let i=0;i<count;i++){
+      d.push({id:id++, baseTime:new Date(c), intervalH:s.h, seg:s.label});
+      c=new Date(c.getTime()+s.h*3600000);
+    }
+  }
+  return d;
+}
+
+// Aplica offsets: a partir da dose ajustada, todas as seguintes deslocam
+function applyOffsets(doses, medId){
+  const result = doses.map(d=>({...d, time:new Date(d.baseTime)}));
+  // recolhe todos os offsets para este med, ordenados por id
+  const keys = Object.keys(offsets)
+    .filter(k=>k.startsWith(medId+'_'))
+    .map(k=>({id:parseInt(k.split('_')[1]), delta:offsets[k]}))
+    .sort((a,b)=>a.id-b.id);
+
+  for(const {id, delta} of keys){
+    // aplica delta a esta dose e recalcula as seguintes mantendo os intervalos
+    let base = result[id].baseTime.getTime() + delta;
+    result[id].time = new Date(base);
+    result[id].adjusted = true;
+    for(let i=id+1;i<result.length;i++){
+      base += result[i].intervalH * 3600000;
+      result[i].time = new Date(base);
+      result[i].adjusted = true;
+    }
+    break; // só o primeiro offset activo conta (o mais antigo não ajustado)
+  }
+  return result;
+}
 
 const MEDS=[
-  {id:'pred',name:'Prednisolona 20 mg',badge:'Comprimido',bb:'#eaf6ef',bc:'#1a6b3a',dot:'#2d9e5f',info:['12/12h','5 dias'],doses:genD(12,5)},
-  {id:'salb',name:'Salbutamol 100 µg',badge:'Inalação',bb:'#fef2ee',bc:'#993c1d',dot:'#e2622a',info:['Esquema crise','8 dias'],crisis:'4/4h×2d → 6/6h×2d → 8/8h×2d → 12/12h×2d',doses:genS()},
-  {id:'ipra',name:'Ipratrópio 20 µg',badge:'Inalação',bb:'#eef4fb',bc:'#1a4f82',dot:'#3a80c2',info:['8/8h','3 dias'],doses:genD(8,3)},
-  {id:'azit',name:'Azitromicina 40 mg/ml',badge:'Suspensão oral',bb:'#f0eefe',bc:'#4a3fa0',dot:'#7060d0',info:['1×/dia','3 dias'],doses:genD(24,3)},
+  {id:'pred', name:'Prednisolona 20 mg', badge:'Comprimido', bb:'#eaf6ef', bc:'#1a6b3a', dot:'#2d9e5f', info:['12/12h','5 dias'], baseDoses:genBase(12,5)},
+  {id:'salb', name:'Salbutamol 100 µg',  badge:'Inalação',   bb:'#fef2ee', bc:'#993c1d', dot:'#e2622a', info:['Esquema crise','8 dias'], baseDoses:genSalbBase(), hasSeg:true},
+  {id:'ipra', name:'Ipratrópio 20 µg',   badge:'Inalação',   bb:'#eef4fb', bc:'#1a4f82', dot:'#3a80c2', info:['8/8h','3 dias'],  baseDoses:genBase(8,3)},
+  {id:'azit', name:'Azitromicina 40 mg/ml', badge:'Suspensão oral', bb:'#f0eefe', bc:'#4a3fa0', dot:'#7060d0', info:['1×/dia','3 dias'], baseDoses:genBase(24,3)},
 ];
+
+// doses com offsets aplicados (recalculado em cada render/sync)
+function getDoses(med){ return applyOffsets(med.baseDoses, med.id); }
 
 const fmt=d=>d.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
 const fmtD=d=>{const n=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];return n[d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1);};
@@ -174,44 +258,103 @@ const fmtF=d=>d.toLocaleString('pt-PT',{day:'2-digit',month:'2-digit',hour:'2-di
 
 function setSt(t,m){const d=document.getElementById('sdot');d.className='sdot'+(t==='ok'?'':t==='warn'?' warn':' err');document.getElementById('stxt').textContent=m;}
 
-// ---- Firebase listener em tempo real ----
-REF.on('value', snap => {
-  const data = snap.val() || {};
-  state = data.state || {};
-  fLog  = data.fLog  || [];
-  pLog  = data.pLog  || [];
-  aLog  = data.aLog  || [];
-  const now = new Date();
-  document.getElementById('lsync').textContent = 'Sincronizado às ' + fmt(now);
-  setSt('ok', 'Ligado — sincronização em tempo real');
+// ---- Firebase ----
+REF.on('value', snap=>{
+  const data=snap.val()||{};
+  state=data.state||{}; fLog=data.fLog||[]; pLog=data.pLog||[]; aLog=data.aLog||[];
+  offsets=data.offsets||{};
+  document.getElementById('lsync').textContent='Sincronizado às '+fmt(new Date());
+  setSt('ok','Ligado — sincronização em tempo real');
   render();
-}, err => {
-  setSt('err', 'Erro Firebase: ' + err.message);
-});
+}, err=>{ setSt('err','Erro Firebase: '+err.message); });
 
 async function save(){
   if(saving)return; saving=true;
   setSt('warn','A guardar...');
   try{
-    await REF.set({state, fLog, pLog, aLog});
+    await REF.set({state,fLog,pLog,aLog,offsets});
     setSt('ok','Guardado — '+fmt(new Date()));
-  }catch(e){
-    setSt('err','Erro ao guardar: '+e.message);
-  }
+  }catch(e){ setSt('err','Erro: '+e.message); }
   saving=false;
 }
 
-function doSync(){ setSt('warn','A sincronizar...'); REF.once('value', snap=>{const d=snap.val()||{};state=d.state||{};fLog=d.fLog||[];pLog=d.pLog||[];aLog=d.aLog||[];setSt('ok','Sincronizado — '+fmt(new Date()));render();}); }
+function doSync(){ REF.once('value',snap=>{const d=snap.val()||{};state=d.state||{};fLog=d.fLog||[];pLog=d.pLog||[];aLog=d.aLog||[];offsets=d.offsets||{};setSt('ok','Sincronizado — '+fmt(new Date()));render();}); }
 
-function log(t,m){aLog.unshift({t,m,at:new Date().toISOString()});if(aLog.length>100)aLog=aLog.slice(0,100);}
+function log(t,m){ aLog.unshift({t,m,at:new Date().toISOString()}); if(aLog.length>100)aLog=aLog.slice(0,100); }
 
-function toggle(mid,did){
-  const key=mid+'_'+did,med=MEDS.find(x=>x.id===mid),dose=med.doses.find(x=>x.id===did),was=!!state[key];
-  if(!was){state[key]={by:NOME,at:new Date().toISOString()};log('g',NOME+' tomou '+med.name+' ('+fmt(dose.time)+' '+fmtD(dose.time)+')');}
-  else{delete state[key];log('gr',NOME+' desmarcou '+med.name+' ('+fmt(dose.time)+' '+fmtD(dose.time)+')');}
-  save();render();
+// ---- Toggle toma ----
+function toggle(mid, did){
+  const key=mid+'_'+did;
+  const med=MEDS.find(x=>x.id===mid);
+  const doses=getDoses(med);
+  const dose=doses.find(x=>x.id===did);
+  const was=!!state[key];
+  if(!was){ state[key]={by:NOME,at:new Date().toISOString()}; log('g',NOME+' tomou '+med.name+' ('+fmt(dose.time)+' '+fmtD(dose.time)+')'); }
+  else{ delete state[key]; log('gr',NOME+' desmarcou '+med.name+' ('+fmt(dose.time)+' '+fmtD(dose.time)+')'); }
+  save(); render();
 }
 
+// ---- Edição de hora ----
+let editCtx = null; // {mid, did}
+
+function openEdit(e, mid, did){
+  e.stopPropagation();
+  const med=MEDS.find(x=>x.id===mid);
+  const doses=getDoses(med);
+  const dose=doses.find(x=>x.id===did);
+  editCtx={mid,did};
+  document.getElementById('modalDesc').textContent=
+    med.name+' — dose '+(did+1)+' de '+doses.length+'\nAltera a hora desta dose e todas as seguintes recalculam automaticamente.';
+  document.getElementById('modalTime').value=fmt(dose.time).replace('h',':');
+  document.getElementById('modalBg').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('modalBg').classList.remove('open');
+  editCtx=null;
+}
+
+function confirmModal(){
+  if(!editCtx)return;
+  const {mid,did}=editCtx;
+  const val=document.getElementById('modalTime').value; // "HH:MM"
+  if(!val){closeModal();return;}
+  const [hh,mm]=val.split(':').map(Number);
+
+  const med=MEDS.find(x=>x.id===mid);
+  const doses=getDoses(med);
+  const dose=doses.find(x=>x.id===did);
+
+  // calcula nova hora mantendo o mesmo dia da dose original
+  const newTime=new Date(dose.time);
+  newTime.setHours(hh,mm,0,0);
+
+  // se a hora nova for antes da dose anterior, avança um dia
+  if(did>0){
+    const prev=doses[did-1].time;
+    if(newTime<=prev) newTime.setDate(newTime.getDate()+1);
+  }
+
+  // calcula o delta em relação ao baseTime original
+  const delta=newTime.getTime()-dose.baseTime.getTime();
+
+  // remove offsets anteriores para doses >= did (reset a partir daqui)
+  const toRemove=Object.keys(offsets).filter(k=>{
+    if(!k.startsWith(mid+'_'))return false;
+    const id=parseInt(k.split('_')[1]);
+    return id>=did;
+  });
+  toRemove.forEach(k=>delete offsets[k]);
+
+  // guarda o novo offset
+  offsets[mid+'_'+did]=delta;
+
+  log('p',NOME+': hora ajustada — '+med.name+' dose '+(did+1)+' → '+fmt(newTime)+' '+fmtD(newTime));
+  closeModal();
+  save(); render();
+}
+
+// ---- Febre ----
 function doFever(){
   const t=parseFloat(document.getElementById('ftemp').value),note=document.getElementById('fnote').value.trim();
   if(isNaN(t)||t<35||t>42){document.getElementById('ftemp').focus();return;}
@@ -221,12 +364,12 @@ function doFever(){
   else if(t>=38){al.className='falert w';al.style.display='block';al.textContent='Temperatura elevada ('+t.toFixed(1)+'°C). Pode administrar Paracetamol.';}
   else al.style.display='none';
   log(t>=38.5?'r':t>=37.5?'o':'g','Febre: '+t.toFixed(1)+'°C'+(note?' ('+note+')':''));
-  document.getElementById('ftemp').value='';document.getElementById('fnote').value='';
-  save();render();
+  document.getElementById('ftemp').value=''; document.getElementById('fnote').value='';
+  save(); render();
 }
-
 function delF(i){if(!confirm('Apagar registo?'))return;fLog.splice(i,1);save();render();}
 
+// ---- Paracetamol ----
 function doPara(){
   const now=new Date();
   if(pLog.length>0){const last=new Date(pLog[0].at);if((now-last)/3600000<6){alert('Intervalo mínimo 6h.\nPróxima toma: '+fmt(new Date(last.getTime()+6*3600000)));return;}}
@@ -234,43 +377,84 @@ function doPara(){
   const lt=fLog.length>0?fLog[0].temp:null;
   pLog.unshift({at:now.toISOString(),by:NOME,temp:lt});if(pLog.length>40)pLog=pLog.slice(0,40);
   log('o',NOME+' tomou Paracetamol'+(lt?' ('+lt.toFixed(1)+'°C)':''));
-  save();render();
+  save(); render();
 }
 
+// ---- Render ----
 function render(){
-  const tot=MEDS.reduce((s,m)=>s+m.doses.length,0),tak=Object.keys(state).length,pct=tot>0?Math.round(tak/tot*100):0;
+  const tot=MEDS.reduce((s,m)=>s+m.baseDoses.length,0);
+  const tak=Object.keys(state).length;
+  const pct=tot>0?Math.round(tak/tot*100):0;
   document.getElementById('pf').style.width=pct+'%';
   document.getElementById('pt').textContent=tak+' de '+tot+' doses ('+pct+'%)';
 
-  const c=document.getElementById('cards');c.innerHTML='';
+  const container=document.getElementById('cards');
+  container.innerHTML='';
+
   MEDS.forEach(med=>{
-    const card=document.createElement('div');card.className='mcard';
+    const doses=getDoses(med);
+    const card=document.createElement('div');
+    card.className='mcard';
+
     let h='<div class="mhdr"><div class="mdot" style="background:'+med.dot+'"></div><div class="mname">'+med.name+'</div><span class="mbadge" style="background:'+med.bb+';color:'+med.bc+'">'+med.badge+'</span></div>';
     h+='<div class="minfo">'+med.info.map(i=>'<span>'+i+'</span>').join('')+'</div>';
-    if(med.crisis)h+='<div class="crisis">'+med.crisis+'</div>';
-    h+='<div class="dsec"><div class="dlbl">Doses</div><div class="dgrid">';
-    med.doses.forEach(d=>{
-      const k=med.id+'_'+d.id,tk=!!state[k];
-      h+='<div class="dp'+(tk?' tk':'')+'" onclick="toggle(\''+med.id+'\','+d.id+')">';
-      h+='<div class="ck">✓</div><div class="dt">'+fmt(d.time)+'</div><div class="dd">'+fmtD(d.time)+'</div>';
-      if(tk)h+='<div class="dw">'+NOME+'</div>';
+    h+='<div class="dsec"><div class="dlbl">Doses <span style="font-size:10px;font-weight:400;color:var(--hint)">(✎ para ajustar hora)</span></div>';
+
+    if(med.hasSeg){
+      // agrupa por segmento
+      const segs={};
+      doses.forEach(d=>{
+        const s=d.seg||'Outras';
+        if(!segs[s])segs[s]=[];
+        segs[s].push(d);
+      });
+      for(const [label,sdoses] of Object.entries(segs)){
+        h+='<div class="seg-label">'+label+'</div><div class="dgrid">';
+        sdoses.forEach(d=>{
+          const k=med.id+'_'+d.id, tk=!!state[k];
+          h+='<div class="dp'+(tk?' tk':'')+(d.adjusted?' adjusted':'')+'" onclick="toggle(\''+med.id+'\','+d.id+')">';
+          h+='<button class="edit-btn" onclick="openEdit(event,\''+med.id+'\','+d.id+')">✎</button>';
+          h+='<div class="ck">✓</div><div class="dt">'+fmt(d.time)+'</div><div class="dd">'+fmtD(d.time)+'</div>';
+          if(tk)h+='<div class="dw">'+NOME+'</div>';
+          h+='</div>';
+        });
+        h+='</div>';
+      }
+    } else {
+      h+='<div class="dgrid">';
+      doses.forEach(d=>{
+        const k=med.id+'_'+d.id, tk=!!state[k];
+        h+='<div class="dp'+(tk?' tk':'')+(d.adjusted?' adjusted':'')+'" onclick="toggle(\''+med.id+'\','+d.id+')">';
+        h+='<button class="edit-btn" onclick="openEdit(event,\''+med.id+'\','+d.id+')">✎</button>';
+        h+='<div class="ck">✓</div><div class="dt">'+fmt(d.time)+'</div><div class="dd">'+fmtD(d.time)+'</div>';
+        if(tk)h+='<div class="dw">'+NOME+'</div>';
+        h+='</div>';
+      });
       h+='</div>';
-    });
-    h+='</div></div>';card.innerHTML=h;c.appendChild(card);
+    }
+    h+='</div>';
+    card.innerHTML=h;
+    container.appendChild(card);
   });
 
+  // Febre
   document.getElementById('fhist').innerHTML=!fLog.length?'<div class="emp">Nenhum registo ainda.</div>':
     fLog.slice(0,15).map((f,i)=>'<div class="frow"><span class="ft '+(f.temp>=38.5?'hi':f.temp>=37.5?'mi':'ok')+'">'+f.temp.toFixed(1)+'°C</span><span class="fm">'+fmtF(new Date(f.at))+(f.note?' · '+f.note:'')+'</span><button class="delbtn" onclick="delF('+i+')">apagar</button></div>').join('');
 
+  // Paracetamol
   document.getElementById('pdoses').innerHTML=!pLog.length?'<div class="emp">Nenhuma toma registada.</div>':
     pLog.slice(0,20).map(p=>{const d=new Date(p.at);return'<div class="ppill"><div class="pck">✓</div><div class="ptt">'+fmt(d)+'</div><div class="pdd">'+fmtD(d)+'</div>'+(p.temp?'<div class="ptp">'+p.temp.toFixed(1)+'°C</div>':'')+'</div>';}).join('');
 
   if(pLog.length>0){const l=new Date(pLog[0].at),nx=new Date(l.getTime()+6*3600000);document.getElementById('pnxt').textContent=nx>new Date()?'Próxima toma: '+fmt(nx)+' ('+fmtD(nx)+')':'Pode tomar agora se necessário.';}
   else document.getElementById('pnxt').textContent='';
 
+  // Log
   document.getElementById('llist').innerHTML=!aLog.length?'<div class="emp">Nenhuma atividade ainda.</div>':
-    aLog.slice(0,40).map(e=>'<div class="li"><div class="ldot '+(e.t==='g'?'g':e.t==='o'?'o':e.t==='r'?'r':'gr')+'"></div><div><div class="lt">'+e.m+'</div><div class="lts">'+fmtF(new Date(e.at))+'</div></div></div>').join('');
+    aLog.slice(0,40).map(e=>'<div class="li"><div class="ldot '+(e.t==='g'?'g':e.t==='o'?'o':e.t==='r'?'r':e.t==='p'?'p':'gr')+'"></div><div><div class="lt">'+e.m+'</div><div class="lts">'+fmtF(new Date(e.at))+'</div></div></div>').join('');
 }
+
+// fechar modal ao clicar fora
+document.getElementById('modalBg').addEventListener('click',function(e){if(e.target===this)closeModal();});
 </script>
 </body>
 </html>
