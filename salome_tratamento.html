@@ -19,17 +19,24 @@
   h1{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--text);margin-bottom:3px;}
   .sub{font-size:13px;color:var(--muted);margin-bottom:18px;}
 
+  /* Setup */
   .setup-card{background:var(--surface);border:2px solid #a3d9b8;border-radius:var(--radius);padding:20px;margin-bottom:20px;}
   .setup-card h2{font-size:15px;font-weight:600;margin-bottom:6px;}
-  .setup-card p{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6;}
-  .setup-help{font-size:12px;color:var(--hint);line-height:1.8;margin-bottom:14px;}
+  .setup-help{font-size:12px;color:var(--hint);line-height:1.9;margin-bottom:14px;}
   .setup-help a{color:#3a80c2;text-decoration:none;}
   .setup-help a:hover{text-decoration:underline;}
   .setup-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
   .setup-row label{font-size:13px;color:var(--muted);min-width:80px;}
   .setup-row input{flex:1;min-width:200px;font-size:13px;font-family:'DM Sans',sans-serif;padding:7px 10px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:var(--surface);color:var(--text);}
-  .setup-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
-  .setup-msg{font-size:12px;color:var(--muted);margin-top:10px;min-height:18px;}
+  .setup-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .setup-msg{font-size:12px;color:var(--muted);margin-top:10px;min-height:18px;line-height:1.6;}
+
+  /* Share box */
+  .share-box{background:#f0f7ff;border:1px solid #bcd4f0;border-radius:var(--radius-sm);padding:12px 14px;margin-top:14px;display:none;}
+  .share-box p{font-size:12px;color:#1a4f82;margin-bottom:8px;font-weight:500;}
+  .share-url{font-size:11px;color:#1a4f82;word-break:break-all;background:#e0edf8;padding:6px 8px;border-radius:6px;margin-bottom:8px;font-family:monospace;}
+  .copy-btn{font-size:12px;padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;border:1px solid #bcd4f0;background:#ffffff;color:#1a4f82;font-family:'DM Sans',sans-serif;}
+  .copy-btn:hover{background:#e0edf8;}
 
   .btn{font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;padding:7px 16px;border-radius:var(--radius-sm);cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text);transition:background 0.15s;}
   .btn:hover{background:#f0ede8;}
@@ -91,7 +98,7 @@
   .fever-temp.mid{color:#d97706;}
   .fever-temp.ok{color:#2d9e5f;}
   .fever-meta{color:var(--muted);font-size:12px;flex:1;}
-  .del-btn{font-size:11px;color:var(--hint);cursor:pointer;padding:2px 7px;border-radius:4px;border:1px solid var(--border);background:none;font-family:'DM Sans',sans-serif;transition:color 0.15s,border-color 0.15s;}
+  .del-btn{font-size:11px;color:var(--hint);cursor:pointer;padding:2px 7px;border-radius:4px;border:1px solid var(--border);background:none;font-family:'DM Sans',sans-serif;}
   .del-btn:hover{color:#dc2626;border-color:#fca5a5;}
 
   .para-card{background:var(--surface);border:2px solid var(--warning-border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;}
@@ -130,29 +137,35 @@
 
 <!-- Setup -->
 <div id="setupCard" class="setup-card">
-  <h2>Configuração inicial (apenas uma vez)</h2>
-  <p>Para guardar e sincronizar os dados entre dispositivos usa o <strong>JSONBin.io</strong> — gratuito, sem instalar nada.</p>
+  <h2>Configuração inicial</h2>
   <div class="setup-help">
     <strong>Passo 1</strong> — Vai a <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> → cria conta gratuita<br>
-    <strong>Passo 2</strong> — Menu lateral → <strong>API Keys</strong> → copia a <strong>Master Key</strong><br>
+    <strong>Passo 2</strong> — Menu → <strong>API Keys</strong> → copia a <strong>Master Key</strong><br>
     <strong>Passo 3</strong> — Cola abaixo e clica <strong>"Criar e guardar"</strong><br>
-    <strong>Para ligar outro dispositivo</strong> — usa o mesmo API Key + Bin ID que aparece depois
+    <strong>Partilhar</strong> — após criar, aparece um link já configurado para enviar à mãe
   </div>
   <div class="setup-row">
     <label>API Key:</label>
     <input type="text" id="apiKeyInput" placeholder="$2a$10$..." />
   </div>
-  <div id="existingRow" style="display:none;">
-    <div class="setup-row" style="margin-top:6px;">
+  <div id="existingRows" style="display:none;">
+    <div class="setup-row">
       <label>Bin ID:</label>
       <input type="text" id="binIdInput" placeholder="64a3f2..." />
     </div>
   </div>
   <div class="setup-btns">
     <button class="btn btn-green" onclick="setupNew()">Criar e guardar (1ª vez)</button>
-    <button class="btn" onclick="toggleExisting()">Ligar a bin existente</button>
+    <button class="btn" onclick="toggleExisting()">Já tenho Bin ID</button>
   </div>
   <div class="setup-msg" id="setupMsg"></div>
+
+  <!-- Share box after setup -->
+  <div class="share-box" id="shareBox">
+    <p>Partilha este link com a mãe da Salomé — abre já configurado:</p>
+    <div class="share-url" id="shareUrl"></div>
+    <button class="copy-btn" onclick="copyLink()">Copiar link</button>
+  </div>
 </div>
 
 <!-- Main -->
@@ -164,8 +177,17 @@
   <div class="sync-row">
     <button class="btn" onclick="syncNow()">↺ Sincronizar</button>
     <span id="lastSync"></span>
-    <button class="btn" style="margin-left:auto;font-size:11px;color:var(--hint);" onclick="resetConfig()">Reconfigurar</button>
+    <button class="btn" style="margin-left:auto;font-size:11px;color:var(--hint);" onclick="showShareLink()">Partilhar link</button>
+    <button class="btn" style="font-size:11px;color:var(--hint);" onclick="resetConfig()">Reconfigurar</button>
   </div>
+
+  <!-- Share link inline -->
+  <div class="share-box" id="shareBoxMain" style="margin-bottom:14px;">
+    <p>Link para partilhar (já configurado):</p>
+    <div class="share-url" id="shareUrlMain"></div>
+    <button class="copy-btn" onclick="copyLinkMain()">Copiar link</button>
+  </div>
+
   <div class="progress-row">
     <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
     <span class="progress-txt" id="progTxt">...</span>
@@ -219,7 +241,6 @@
 
 <script>
 const NOME = 'Salomé';
-const LS_CFG = 'salome_cfg_v1';
 const START = new Date('2026-04-23T10:00:00');
 let API_KEY = '', BIN_ID = '';
 let state = {}, feverLog = [], paraLog = [], actLog = [];
@@ -232,10 +253,10 @@ function genDoses(intervalH, days) {
   return d;
 }
 function genSalb() {
-  const segs = [{ h:4,days:2 },{ h:6,days:2 },{ h:8,days:2 },{ h:12,days:2 }];
+  const segs = [{h:4,days:2},{h:6,days:2},{h:8,days:2},{h:12,days:2}];
   const d = []; let cursor = new Date(START); let id = 0;
   for (const s of segs)
-    for (let i = 0; i < s.days * (24 / s.h); i++) {
+    for (let i = 0; i < s.days * (24/s.h); i++) {
       d.push({ id: id++, time: new Date(cursor) });
       cursor = new Date(cursor.getTime() + s.h * 3600000);
     }
@@ -255,206 +276,254 @@ function fmtFull(d){ return d.toLocaleString('pt-PT',{day:'2-digit',month:'2-dig
 
 function setStatus(type, msg) {
   const dot = document.getElementById('statusDot');
-  dot.className = 'status-dot' + (type==='ok'?'': type==='warn'?' warn':' err');
+  dot.className = 'status-dot'+(type==='ok'?'':type==='warn'?' warn':' err');
   document.getElementById('statusTxt').textContent = msg;
 }
 
+// Config via URL hash — persiste em qualquer origem
 function loadConfig() {
-  try { const c = JSON.parse(localStorage.getItem(LS_CFG)||'{}'); API_KEY=c.apiKey||''; BIN_ID=c.binId||''; } catch(e){}
+  try {
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      const params = new URLSearchParams(hash);
+      API_KEY = params.get('k') || '';
+      BIN_ID  = params.get('b') || '';
+    }
+  } catch(e) {}
 }
-function saveConfig() {
-  localStorage.setItem(LS_CFG, JSON.stringify({apiKey:API_KEY, binId:BIN_ID}));
+
+function buildShareUrl() {
+  const base = window.location.href.split('#')[0];
+  return base + '#k=' + encodeURIComponent(API_KEY) + '&b=' + encodeURIComponent(BIN_ID);
 }
+
+function showShareLink() {
+  const box = document.getElementById('shareBoxMain');
+  const url = buildShareUrl();
+  document.getElementById('shareUrlMain').textContent = url;
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(document.getElementById('shareUrl').textContent).then(()=>alert('Link copiado!'));
+}
+function copyLinkMain() {
+  navigator.clipboard.writeText(document.getElementById('shareUrlMain').textContent).then(()=>alert('Link copiado!'));
+}
+
 function resetConfig() {
-  if (!confirm('Remover configuração atual?')) return;
-  localStorage.removeItem(LS_CFG);
-  API_KEY=''; BIN_ID='';
-  document.getElementById('setupCard').style.display='block';
-  document.getElementById('mainContent').style.display='none';
+  if (!confirm('Reconfigurar?')) return;
+  window.location.hash = '';
+  window.location.reload();
 }
+
 function toggleExisting() {
-  const r = document.getElementById('existingRow');
-  r.style.display = r.style.display==='none' ? 'block' : 'none';
+  const r = document.getElementById('existingRows');
+  r.style.display = r.style.display === 'none' ? 'block' : 'none';
 }
 
 async function setupNew() {
   const key = document.getElementById('apiKeyInput').value.trim();
-  if (!key) { document.getElementById('setupMsg').textContent='Introduz a API Key.'; return; }
-  document.getElementById('setupMsg').textContent='A criar bin...';
+  if (!key) { document.getElementById('setupMsg').textContent = 'Introduz a API Key.'; return; }
+  document.getElementById('setupMsg').textContent = 'A criar bin...';
   try {
     const res = await fetch('https://api.jsonbin.io/v3/b', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','X-Master-Key':key,'X-Bin-Name':'salome-tratamento'},
-      body:JSON.stringify({state:{},feverLog:[],paraLog:[],actLog:[]})
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'X-Master-Key':key, 'X-Bin-Name':'salome-tratamento' },
+      body: JSON.stringify({ state:{}, feverLog:[], paraLog:[], actLog:[] })
     });
     const data = await res.json();
-    if (!data.metadata?.id) throw new Error(data.message||'Erro desconhecido');
-    API_KEY=key; BIN_ID=data.metadata.id;
-    saveConfig();
-    document.getElementById('setupMsg').innerHTML='<strong>Bin criada!</strong> ID: <code>'+BIN_ID+'</code> — guarda este ID para ligar outros dispositivos.';
-    setTimeout(initMain, 1200);
+    if (!data.metadata?.id) throw new Error(data.message || 'Erro');
+    API_KEY = key;
+    BIN_ID  = data.metadata.id;
+    // Atualiza URL com hash
+    window.location.hash = 'k=' + encodeURIComponent(API_KEY) + '&b=' + encodeURIComponent(BIN_ID);
+    const shareUrl = buildShareUrl();
+    document.getElementById('setupMsg').innerHTML = '<strong>Configurado!</strong> Bin ID: <code>' + BIN_ID + '</code>';
+    document.getElementById('shareUrl').textContent = shareUrl;
+    document.getElementById('shareBox').style.display = 'block';
+    setTimeout(initMain, 1000);
   } catch(e) {
-    document.getElementById('setupMsg').textContent='Erro: '+e.message+'. Verifica a API Key.';
+    document.getElementById('setupMsg').textContent = 'Erro: ' + e.message;
   }
 }
 
 async function connectExisting() {
   const key = document.getElementById('apiKeyInput').value.trim();
   const bid = document.getElementById('binIdInput').value.trim();
-  if (!key||!bid) { document.getElementById('setupMsg').textContent='Preenche API Key e Bin ID.'; return; }
-  API_KEY=key; BIN_ID=bid; saveConfig();
-  document.getElementById('setupMsg').textContent='A ligar...';
-  await loadRemote();
+  if (!key || !bid) { document.getElementById('setupMsg').textContent = 'Preenche ambos os campos.'; return; }
+  API_KEY = key; BIN_ID = bid;
+  window.location.hash = 'k=' + encodeURIComponent(API_KEY) + '&b=' + encodeURIComponent(BIN_ID);
   initMain();
 }
 
 function initMain() {
-  document.getElementById('setupCard').style.display='none';
-  document.getElementById('mainContent').style.display='block';
+  document.getElementById('setupCard').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
   loadRemote();
   setInterval(loadRemote, 30000);
 }
 
 async function loadRemote() {
-  setStatus('warn','A sincronizar...');
+  setStatus('warn', 'A sincronizar...');
   try {
-    const res = await fetch('https://api.jsonbin.io/v3/b/'+BIN_ID+'/latest',{headers:{'X-Master-Key':API_KEY}});
+    const res = await fetch('https://api.jsonbin.io/v3/b/' + BIN_ID + '/latest', {
+      headers: { 'X-Master-Key': API_KEY }
+    });
     const data = await res.json();
     if (!data.record) throw new Error('Sem dados');
-    state=data.record.state||{}; feverLog=data.record.feverLog||[];
-    paraLog=data.record.paraLog||[]; actLog=data.record.actLog||[];
-    const t=new Date();
-    document.getElementById('lastSync').textContent='Sincronizado às '+fmt(t);
-    setStatus('ok','Ligado e sincronizado — '+fmt(t));
+    state    = data.record.state    || {};
+    feverLog = data.record.feverLog || [];
+    paraLog  = data.record.paraLog  || [];
+    actLog   = data.record.actLog   || [];
+    const t = new Date();
+    document.getElementById('lastSync').textContent = 'Sincronizado às ' + fmt(t);
+    setStatus('ok', 'Ligado e sincronizado — ' + fmt(t));
   } catch(e) {
-    setStatus('err','Erro de sincronização');
+    setStatus('err', 'Erro de sincronização');
   }
   render();
 }
 
 async function saveRemote() {
-  if (saving) return; saving=true;
-  setStatus('warn','A guardar...');
+  if (saving) return; saving = true;
+  setStatus('warn', 'A guardar...');
   try {
-    const res = await fetch('https://api.jsonbin.io/v3/b/'+BIN_ID,{
-      method:'PUT',
-      headers:{'Content-Type':'application/json','X-Master-Key':API_KEY},
-      body:JSON.stringify({state,feverLog,paraLog,actLog})
+    const res = await fetch('https://api.jsonbin.io/v3/b/' + BIN_ID, {
+      method: 'PUT',
+      headers: { 'Content-Type':'application/json', 'X-Master-Key': API_KEY },
+      body: JSON.stringify({ state, feverLog, paraLog, actLog })
     });
     const data = await res.json();
     if (!data.record) throw new Error('Falhou');
-    setStatus('ok','Guardado — '+fmt(new Date()));
-  } catch(e) { setStatus('err','Erro ao guardar remotamente'); }
-  saving=false;
+    setStatus('ok', 'Guardado — ' + fmt(new Date()));
+  } catch(e) {
+    setStatus('err', 'Erro ao guardar');
+  }
+  saving = false;
 }
 
-async function syncNow(){ await loadRemote(); }
+async function syncNow() { await loadRemote(); }
 
-function addToLog(type,msg){ actLog.unshift({type,msg,at:new Date().toISOString()}); if(actLog.length>100)actLog=actLog.slice(0,100); }
+function addToLog(type, msg) {
+  actLog.unshift({ type, msg, at: new Date().toISOString() });
+  if (actLog.length > 100) actLog = actLog.slice(0,100);
+}
 
-function toggle(medId,doseId) {
-  const key=medId+'_'+doseId;
-  const med=MEDS.find(m=>m.id===medId);
-  const dose=med.doses.find(d=>d.id===doseId);
-  const was=!!state[key];
-  if(!was){ state[key]={by:NOME,at:new Date().toISOString()}; addToLog('green',NOME+' tomou '+med.name+' ('+fmt(dose.time)+' '+fmtDay(dose.time)+')'); }
-  else { delete state[key]; addToLog('grey',NOME+' desmarcou '+med.name+' ('+fmt(dose.time)+' '+fmtDay(dose.time)+')'); }
+function toggle(medId, doseId) {
+  const key = medId + '_' + doseId;
+  const med = MEDS.find(m => m.id === medId);
+  const dose = med.doses.find(d => d.id === doseId);
+  const was = !!state[key];
+  if (!was) { state[key] = { by:NOME, at:new Date().toISOString() }; addToLog('green', NOME+' tomou '+med.name+' ('+fmt(dose.time)+' '+fmtDay(dose.time)+')'); }
+  else { delete state[key]; addToLog('grey', NOME+' desmarcou '+med.name+' ('+fmt(dose.time)+' '+fmtDay(dose.time)+')'); }
   saveRemote(); render();
 }
 
 function addFever() {
-  const t=parseFloat(document.getElementById('feverTemp').value);
-  const note=document.getElementById('feverNote').value.trim();
-  if(isNaN(t)||t<35||t>42){ document.getElementById('feverTemp').focus(); return; }
-  feverLog.unshift({temp:t,note,at:new Date().toISOString()});
-  if(feverLog.length>50)feverLog=feverLog.slice(0,50);
-  const al=document.getElementById('feverAlert');
-  if(t>=39.5){ al.className='fever-alert'; al.style.display='block'; al.textContent='⚠ Febre alta ('+t.toFixed(1)+'°C). Contactar médico se persistir.'; }
-  else if(t>=38){ al.className='fever-alert warn'; al.style.display='block'; al.textContent='Temperatura elevada ('+t.toFixed(1)+'°C). Pode administrar Paracetamol se necessário.'; }
+  const t = parseFloat(document.getElementById('feverTemp').value);
+  const note = document.getElementById('feverNote').value.trim();
+  if (isNaN(t) || t < 35 || t > 42) { document.getElementById('feverTemp').focus(); return; }
+  feverLog.unshift({ temp:t, note, at:new Date().toISOString() });
+  if (feverLog.length > 50) feverLog = feverLog.slice(0,50);
+  const al = document.getElementById('feverAlert');
+  if (t >= 39.5) { al.className='fever-alert'; al.style.display='block'; al.textContent='⚠ Febre alta ('+t.toFixed(1)+'°C). Contactar médico se persistir.'; }
+  else if (t >= 38) { al.className='fever-alert warn'; al.style.display='block'; al.textContent='Temperatura elevada ('+t.toFixed(1)+'°C). Pode administrar Paracetamol se necessário.'; }
   else { al.style.display='none'; }
-  addToLog(t>=38.5?'red':t>=37.5?'orange':'green','Febre: '+t.toFixed(1)+'°C'+(note?' ('+note+')':''));
-  document.getElementById('feverTemp').value=''; document.getElementById('feverNote').value='';
+  addToLog(t>=38.5?'red':t>=37.5?'orange':'green', 'Febre: '+t.toFixed(1)+'°C'+(note?' ('+note+')':''));
+  document.getElementById('feverTemp').value = '';
+  document.getElementById('feverNote').value = '';
   saveRemote(); render();
 }
 
-function delFever(i){ if(!confirm('Apagar este registo?'))return; feverLog.splice(i,1); saveRemote(); render(); }
+function delFever(i) {
+  if (!confirm('Apagar este registo?')) return;
+  feverLog.splice(i,1); saveRemote(); render();
+}
 
 function addPara() {
-  const now=new Date();
-  if(paraLog.length>0){
-    const last=new Date(paraLog[0].at);
-    const diffH=(now-last)/3600000;
-    if(diffH<6){ alert('Intervalo mínimo de 6 horas.\nPróxima toma possível: '+fmt(new Date(last.getTime()+6*3600000))); return; }
+  const now = new Date();
+  if (paraLog.length > 0) {
+    const last = new Date(paraLog[0].at);
+    if ((now - last) / 3600000 < 6) {
+      alert('Intervalo mínimo de 6 horas.\nPróxima toma: ' + fmt(new Date(last.getTime() + 6*3600000)));
+      return;
+    }
   }
-  const today=now.toDateString();
-  if(paraLog.filter(p=>new Date(p.at).toDateString()===today).length>=4){ alert('Máximo de 4 tomas por dia atingido.'); return; }
-  const lastTemp=feverLog.length>0?feverLog[0].temp:null;
-  paraLog.unshift({at:now.toISOString(),by:NOME,temp:lastTemp});
-  if(paraLog.length>40)paraLog=paraLog.slice(0,40);
-  addToLog('orange',NOME+' tomou Paracetamol'+(lastTemp?' (febre: '+lastTemp.toFixed(1)+'°C)':''));
+  const today = now.toDateString();
+  if (paraLog.filter(p => new Date(p.at).toDateString() === today).length >= 4) {
+    alert('Máximo de 4 tomas por dia atingido.'); return;
+  }
+  const lastTemp = feverLog.length > 0 ? feverLog[0].temp : null;
+  paraLog.unshift({ at:now.toISOString(), by:NOME, temp:lastTemp });
+  if (paraLog.length > 40) paraLog = paraLog.slice(0,40);
+  addToLog('orange', NOME+' tomou Paracetamol'+(lastTemp?' (febre: '+lastTemp.toFixed(1)+'°C)':''));
   saveRemote(); render();
 }
 
 function render() {
-  const total=MEDS.reduce((s,m)=>s+m.doses.length,0);
-  const taken=Object.keys(state).length;
-  const pct=total>0?Math.round(taken/total*100):0;
-  document.getElementById('progFill').style.width=pct+'%';
-  document.getElementById('progTxt').textContent=taken+' de '+total+' doses ('+pct+'%)';
+  const total = MEDS.reduce((s,m) => s+m.doses.length, 0);
+  const taken = Object.keys(state).length;
+  const pct = total > 0 ? Math.round(taken/total*100) : 0;
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progTxt').textContent = taken+' de '+total+' doses ('+pct+'%)';
 
-  const container=document.getElementById('cards'); container.innerHTML='';
-  MEDS.forEach(med=>{
-    const card=document.createElement('div'); card.className='med-card';
-    let h='<div class="med-hdr"><div class="med-dot" style="background:'+med.dot+'"></div>';
-    h+='<div class="med-name">'+med.name+'</div>';
-    h+='<span class="med-badge" style="background:'+med.badgeBg+';color:'+med.badgeClr+'">'+med.badge+'</span></div>';
-    h+='<div class="med-info-row">'+med.info.map(i=>'<span>'+i+'</span>').join('')+'</div>';
-    if(med.crisis)h+='<div class="crisis-box">'+med.crisis+'</div>';
-    h+='<div class="doses-section"><div class="doses-lbl">Doses</div><div class="doses-grid">';
-    med.doses.forEach(dose=>{
-      const key=med.id+'_'+dose.id; const tk=!!state[key];
-      h+='<div class="dose-pill'+(tk?' taken':'')+'" onclick="toggle(\''+med.id+'\','+dose.id+')">';
-      h+='<div class="d-check">✓</div><div class="d-time">'+fmt(dose.time)+'</div>';
-      h+='<div class="d-day">'+fmtDay(dose.time)+'</div>';
-      if(tk)h+='<div class="d-who">'+NOME+'</div>';
-      h+='</div>';
+  const container = document.getElementById('cards'); container.innerHTML = '';
+  MEDS.forEach(med => {
+    const card = document.createElement('div'); card.className = 'med-card';
+    let h = '<div class="med-hdr"><div class="med-dot" style="background:'+med.dot+'"></div>';
+    h += '<div class="med-name">'+med.name+'</div>';
+    h += '<span class="med-badge" style="background:'+med.badgeBg+';color:'+med.badgeClr+'">'+med.badge+'</span></div>';
+    h += '<div class="med-info-row">'+med.info.map(i=>'<span>'+i+'</span>').join('')+'</div>';
+    if (med.crisis) h += '<div class="crisis-box">'+med.crisis+'</div>';
+    h += '<div class="doses-section"><div class="doses-lbl">Doses</div><div class="doses-grid">';
+    med.doses.forEach(dose => {
+      const key = med.id+'_'+dose.id; const tk = !!state[key];
+      h += '<div class="dose-pill'+(tk?' taken':'')+'" onclick="toggle(\''+med.id+'\','+dose.id+')">';
+      h += '<div class="d-check">✓</div><div class="d-time">'+fmt(dose.time)+'</div>';
+      h += '<div class="d-day">'+fmtDay(dose.time)+'</div>';
+      if (tk) h += '<div class="d-who">'+NOME+'</div>';
+      h += '</div>';
     });
-    h+='</div></div>'; card.innerHTML=h; container.appendChild(card);
+    h += '</div></div>'; card.innerHTML = h; container.appendChild(card);
   });
 
-  const fh=document.getElementById('feverHistory');
-  fh.innerHTML=!feverLog.length?'<div class="empty-history">Nenhum registo ainda.</div>':
-    feverLog.slice(0,15).map((f,i)=>{
-      const cls=f.temp>=38.5?'high':f.temp>=37.5?'mid':'ok';
+  const fh = document.getElementById('feverHistory');
+  fh.innerHTML = !feverLog.length ? '<div class="empty-history">Nenhum registo ainda.</div>' :
+    feverLog.slice(0,15).map((f,i) => {
+      const cls = f.temp>=38.5?'high':f.temp>=37.5?'mid':'ok';
       return '<div class="fever-row"><span class="fever-temp '+cls+'">'+f.temp.toFixed(1)+'°C</span>'
         +'<span class="fever-meta">'+fmtFull(new Date(f.at))+(f.note?' · '+f.note:'')+'</span>'
         +'<button class="del-btn" onclick="delFever('+i+')">apagar</button></div>';
     }).join('');
 
-  const pd=document.getElementById('paraDoses');
-  pd.innerHTML=!paraLog.length?'<div class="empty-history">Nenhuma toma registada.</div>':
-    paraLog.slice(0,20).map(p=>{
-      const d=new Date(p.at);
+  const pd = document.getElementById('paraDoses');
+  pd.innerHTML = !paraLog.length ? '<div class="empty-history">Nenhuma toma registada.</div>' :
+    paraLog.slice(0,20).map(p => {
+      const d = new Date(p.at);
       return '<div class="para-pill"><div class="p-check">✓</div><div class="p-time">'+fmt(d)+'</div>'
         +'<div class="p-day">'+fmtDay(d)+'</div>'+(p.temp?'<div class="p-temp">'+p.temp.toFixed(1)+'°C</div>':'')+'</div>';
     }).join('');
 
-  const pn=document.getElementById('paraNext');
-  if(paraLog.length>0){
-    const last=new Date(paraLog[0].at); const next=new Date(last.getTime()+6*3600000);
-    pn.textContent=next>new Date()?'Próxima toma possível: '+fmt(next)+' ('+fmtDay(next)+')':'Pode ser administrado agora se necessário.';
+  const pn = document.getElementById('paraNext');
+  if (paraLog.length > 0) {
+    const last = new Date(paraLog[0].at); const next = new Date(last.getTime()+6*3600000);
+    pn.textContent = next > new Date() ? 'Próxima toma possível: '+fmt(next)+' ('+fmtDay(next)+')' : 'Pode ser administrado agora se necessário.';
   } else { pn.textContent=''; }
 
-  const ll=document.getElementById('logList');
-  ll.innerHTML=!actLog.length?'<div class="log-empty">Nenhuma atividade ainda.</div>':
-    actLog.slice(0,40).map(e=>
+  const ll = document.getElementById('logList');
+  ll.innerHTML = !actLog.length ? '<div class="log-empty">Nenhuma atividade ainda.</div>' :
+    actLog.slice(0,40).map(e =>
       '<div class="log-item"><div class="log-dot '+e.type+'"></div>'
       +'<div><div class="log-txt">'+e.msg+'</div><div class="log-ts">'+fmtFull(new Date(e.at))+'</div></div></div>'
     ).join('');
 }
 
+// Init
 loadConfig();
-if(API_KEY&&BIN_ID){ initMain(); }
+if (API_KEY && BIN_ID) {
+  initMain();
+}
 </script>
 </body>
 </html>
