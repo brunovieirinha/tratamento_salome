@@ -279,19 +279,22 @@ const MEDS=[
 ];
 
 function applyOffsets(doses,medId){
+  // VIEIRINHA240426 - fix: aplica cada offset ao seu segmento sem break
+  // cada offset recalcula desde a sua dose até ao próximo offset (ou fim)
   const result=doses.map(d=>({...d,time:new Date(d.baseTime)}));
   const keys=Object.keys(offsets)
     .filter(k=>k.startsWith(medId+'_'))
     .map(k=>({id:parseInt(k.split('_')[1]),delta:offsets[k]}))
     .sort((a,b)=>a.id-b.id);
-  for(const {id,delta} of keys){
+  for(let ki=0;ki<keys.length;ki++){
+    const {id,delta}=keys[ki];
+    const nextOffsetId=ki+1<keys.length?keys[ki+1].id:result.length;
     let base=result[id].baseTime.getTime()+delta;
     result[id].time=new Date(base); result[id].adjusted=true;
-    for(let i=id+1;i<result.length;i++){
+    for(let i=id+1;i<nextOffsetId;i++){
       base+=result[i].intervalH*3600000;
       result[i].time=new Date(base); result[i].adjusted=true;
     }
-    break;
   }
   return result;
 }
@@ -373,7 +376,10 @@ function openEdit(e,mid,did){
   const med=MEDS.find(x=>x.id===mid),doses=getDoses(med),dose=doses.find(x=>x.id===did);
   editCtx={mid,did};
   document.getElementById('modalDesc').textContent=med.name+' — dose '+(did+1)+' de '+doses.length+'\nAs doses seguintes recalculam automaticamente.';
-  document.getElementById('modalTime').value=fmt(dose.time).replace('h',':');
+  // VIEIRINHA240426 - fix: usar HH:MM direto em vez de fmt() que usa formato pt-PT com 'h'
+  const hh=String(dose.time.getHours()).padStart(2,'0');
+  const mm=String(dose.time.getMinutes()).padStart(2,'0');
+  document.getElementById('modalTime').value=hh+':'+mm;
   document.getElementById('modalBg').classList.add('open');
 }
 function closeModal(){document.getElementById('modalBg').classList.remove('open');editCtx=null;}
